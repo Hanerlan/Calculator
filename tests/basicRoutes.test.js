@@ -13,12 +13,14 @@ const addRoutes = require("../routes/add");
 const subtractRoutes = require("../routes/subtract");
 const multiplyRoutes = require("../routes/multiply");
 const divideRoutes = require("../routes/divide");
+const sqrtRoutes = require("../routes/sqrt");
 
 app.use(bodyParser.json());
 app.use("/add", addRoutes);
 app.use("/subtract", subtractRoutes);
 app.use("/multiply", multiplyRoutes);
 app.use("/divide", divideRoutes);
+app.use("/sqrt", sqrtRoutes);
 
 /* One negative and one positive test for the /add, /subtract, /multiply and /divide endpoints */
 describe("testing-guest-routes", () => {
@@ -98,6 +100,27 @@ describe("testing-guest-routes", () => {
             "status": "fail",
             "data": {
                 "number2": "number2 cannot be 0"
+            }
+        });
+    });
+
+    test("GET /sqrt/10 - success", async () => {
+        const { body } = await request(app).get("/sqrt/10");
+        expect(body).toEqual({
+            "status": "success",
+            "data": {
+                "result": 3,
+                "message": "Result has been rounded, as it was not an integer."
+            }
+        });
+    });
+
+    test("GET /sqrt/-5 - fail", async () => {
+        const { body } = await request(app).get("/sqrt/-5");
+        expect(body).toEqual({
+            "status": "fail",
+            "data": {
+                "number1": "The number cannot be less than 0"
             }
         });
     });

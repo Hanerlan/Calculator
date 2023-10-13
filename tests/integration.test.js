@@ -73,4 +73,19 @@ describe('testing-guest-routes', () => {
         expect(body.data).toHaveProperty('result');
         expect(parseInt(body.data.result)).toBe(Math.round(parseInt(body.data.previousValue) / 2));
     });
+
+    test('GET /previous/sqrt - success', async () => {
+        await request(URL)
+            .get('/add/1/2')
+            .set('Authorization', 'Bearer ' + token);
+        const { body } = await request(URL)
+            .get('/previous/sqrt')
+            .set('Authorization', 'Bearer ' + token);
+        expect(body).toHaveProperty('data');
+        expect(body.data).toHaveProperty('previousValue');
+        expect(body.data).toHaveProperty('result');
+        expect(body.data).toHaveProperty('message');
+        expect(parseInt(body.data.result)).toBe(Math.round(Math.sqrt(body.data.previousValue)));
+        expect(body.data.message).toBe("Result has been rounded, as it was not an integer.")
+    });
 });
